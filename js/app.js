@@ -26,6 +26,9 @@
   let current = null;   // currently displayed proverb
   let lastIdx = -1;     // avoid immediate repeats
   let copyResetTimer = null;
+  let brushTimers = []; // pending per-character brush-tick sounds
+  let stampTimer = null;
+  const sfx = window.Sfx || null;
 
   function pickIndex() {
     if (PROVERBS.length <= 1) return 0;
@@ -60,6 +63,18 @@
     void els.inner.offsetWidth;
     els.inner.classList.add("swap");
     els.stamp.classList.add("show");
+
+    // sound: a soft brush tick per character (rate-limited in Sfx),
+    // then the seal thunk when the stamp lands
+    if (sfx) {
+      brushTimers.forEach(clearTimeout);
+      brushTimers = [];
+      for (var k = 0; k < p.zh.length; k++) {
+        brushTimers.push(setTimeout(function () { sfx.brush(); }, k * 55));
+      }
+      clearTimeout(stampTimer);
+      stampTimer = setTimeout(function () { sfx.stamp(); }, lead + 620);
+    }
   }
 
   function roll() {
@@ -117,48 +132,90 @@
   }
 
   function showCopied() {
+    if (sfx) sfx.copy();
     els.copyBtn.classList.add("copied");
     els.copyLabel.textContent = "已抄录 · Copied!";
     clearTimeout(copyResetTimer);
     copyResetTimer = setTimeout(resetCopyLabel, 1800);
   }
 
-  els.rollBtn.addEventListener("click", roll);
+  // a roll triggered by the visitor — plays the draw soundscape
+  function userRoll() {
+    if (sfx) { sfx.unlock(); sfx.draw(); }
+    roll();
+  }
+
+  els.rollBtn.addEventListener("click", userRoll);
   els.copyBtn.addEventListener("click", copy);
 
-  // ---- opening sequence: doors part, scroll unrolls ----
+  // ---- opening sequence: doors part (with sound), scroll unrolls ----
   (function introSequence() {
     var el = document.getElementById("intro");
+    var enterBtn = document.getElementById("introEnter");
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var revealed = false;
+    var opened = false;
 
     function reveal() {
-      if (revealed) return;
-      revealed = true;
       document.body.classList.remove("intro-playing");
       document.body.classList.add("intro-done");
-      roll(); // re-draw so the brush writes in sync with the unrolling scroll
+      roll(); // re-draw so the brush writes (and is heard) as the scroll unrolls
     }
-    function dismiss() {
-      reveal();
-      if (el) {
-        el.classList.add("gone");
-        setTimeout(function () {
-          if (el && el.parentNode) el.parentNode.removeChild(el);
-          el = null;
-        }, 450);
-      }
+    function removeOverlay() {
+      if (!el) return;
+      var node = el;
+      el = null;
+      node.classList.add("gone");
+      setTimeout(function () {
+        if (node.parentNode) node.parentNode.removeChild(node);
+      }, 450);
+    }
+    function open(withSound) {
+      if (opened) return;
+      opened = true;
+      // sound must start inside the user gesture, before the doors move
+      if (withSound && sfx) { sfx.unlock(); sfx.enter(); }
+      if (el) el.classList.add("opening"); // slash glint + doors part
+      setTimeout(reveal, 250);
+      setTimeout(removeOverlay, 1250);
     }
 
-    if (!el || reduce) { dismiss(); return; }
-    el.addEventListener("click", dismiss);
+    if (!el || reduce) {
+      document.body.classList.remove("intro-playing");
+      document.body.classList.add("intro-done");
+      removeOverlay();
+      roll();
+      return;
+    }
+
+    function userOpen() { open(true); }
+    if (enterBtn) {
+      enterBtn.addEventListener("click", function (e) { e.stopPropagation(); userOpen(); });
+    }
+    el.addEventListener("click", userOpen);
     document.addEventListener("keydown", function onKey() {
       document.removeEventListener("keydown", onKey);
-      dismiss();
+      userOpen();
     });
-    setTimeout(reveal, 2400);  // doors begin to part
-    setTimeout(dismiss, 3550); // overlay fully gone
+    // silent fallback for visitors who never interact (audio stays muted)
+    setTimeout(function () { open(false); }, 8000);
   })();
+
+  // ---- sound-effects mute toggle ----
+  var soundBtn = document.getElementById("soundBtn");
+  if (soundBtn && sfx) {
+    function syncSoundBtn() {
+      var m = sfx.isMuted();
+      soundBtn.classList.toggle("muted", m);
+      soundBtn.setAttribute("aria-pressed", m ? "false" : "true");
+    }
+    syncSoundBtn();
+    soundBtn.addEventListener("click", function () {
+      sfx.toggleMuted();
+      syncSoundBtn();
+    });
+  } else if (soundBtn) {
+    soundBtn.style.display = "none";
+  }
 
   // ---- qi ripple on click ----
   document.addEventListener("pointerdown", function (e) {
@@ -209,13 +266,15 @@
       musicBtn.classList.toggle("playing", on);
       musicBtn.setAttribute("aria-pressed", on ? "true" : "false");
       musicLabel.textContent = on ? "止乐 · Silence" : "奏乐 · Music";
+      if (sfx) sfx.onMusic(on); // duck SFX beneath the music
     });
   }
 
   // keyboard: space / enter rolls, C copies
   document.addEventListener("keydown", function (e) {
     if (e.target.tagName === "BUTTON") return;
-    if (e.code === "Space" || e.code === "Enter") { e.preventDefault(); roll(); }
+    if (document.body.classList.contains("intro-playing")) return; // gate still up
+    if (e.code === "Space" || e.code === "Enter") { e.preventDefault(); userRoll(); }
     else if (e.key === "c" || e.key === "C") { if (current) copy(); }
   });
 

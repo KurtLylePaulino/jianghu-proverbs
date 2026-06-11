@@ -17,8 +17,8 @@
     <div class="intro-door right"><span class="door-glyph">湖</span></div>
     <div class="intro-center">
       <div class="intro-title"><span>江</span><span>湖</span><span>箴</span><span>言</span></div>
-      <div class="intro-seal">入江湖</div>
-      <p class="intro-hint">点击跳过 · click to skip</p>
+      <button class="intro-seal" id="introEnter" type="button">入江湖</button>
+      <p class="intro-hint">点击开启 · click to enter</p>
     </div>
     <div class="intro-slash"></div>
   </div>
@@ -137,7 +137,14 @@
     </footer>
   </main>
 
+  <!-- sound-effects toggle -->
+  <button class="sound-toggle" id="soundBtn" type="button" aria-pressed="true" aria-label="Toggle sound effects" title="音效 · Sound effects">
+    <span class="glyph-on">音</span>
+    <span class="glyph-off">静</span>
+  </button>
+
   <script src="js/proverbs.js"></script>
+  <script src="js/sfx.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/app.js"></script>
 </body>
