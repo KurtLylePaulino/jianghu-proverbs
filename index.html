@@ -10,7 +10,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700;900&family=Cinzel:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body class="intro-playing">
+  <!-- opening sequence: temple doors part to reveal the jianghu -->
+  <div class="intro" id="intro" role="presentation">
+    <div class="intro-door left"><span class="door-glyph">江</span></div>
+    <div class="intro-door right"><span class="door-glyph">湖</span></div>
+    <div class="intro-center">
+      <div class="intro-title"><span>江</span><span>湖</span><span>箴</span><span>言</span></div>
+      <div class="intro-seal">入江湖</div>
+      <p class="intro-hint">点击跳过 · click to skip</p>
+    </div>
+    <div class="intro-slash"></div>
+  </div>
+
   <!-- animated jianghu scenery -->
   <div class="scenery" aria-hidden="true">
     <div class="moon"></div>
@@ -86,6 +98,7 @@
           <div class="corner tr" aria-hidden="true"></div>
           <div class="corner bl" aria-hidden="true"></div>
           <div class="corner br" aria-hidden="true"></div>
+          <div class="slash" aria-hidden="true"></div>
 
           <blockquote class="proverb">
             <p class="zh" id="zh">点击下方「抽签」<br>以启江湖之智</p>

@@ -7,7 +7,9 @@ A single-page GitHub Pages site that rolls a **random Chinese proverb** from a c
 - 🎲 **Draw Lots** — roll a random proverb (never repeats the one just shown).
 - 📋 **Copy** — one click copies the proverb, pinyin, translation, and attribution to the clipboard.
 - 🎻 **Music** — loops "Silent Bamboo Path" with a soft fade in/out; toggle it with the 琴 button. The track lazy-loads only when first played.
-- 🏮 **Animated scenery** — parallax mountain silhouettes, fog banks, a breathing moon, swaying lanterns (武 / 俠), falling petals, and birds crossing the sky.
+- 🏮 **Animated scenery** — parallax mountain silhouettes, fog banks, a breathing moon, swaying lanterns (武 / 俠), falling petals, rising embers, and birds crossing the sky.
+- ⛩ **Opening sequence** — temple doors part after the title 江湖箴言 is brushed on screen, a sword glint cuts the dark, and the scroll unrolls into view. Click to skip; disabled under `prefers-reduced-motion`.
+- 🖌 **Living calligraphy** — every draw slashes a glint across the paper, brush-writes the proverb character by character, then stamps the index seal down; a qi ripple blooms from every click.
 - 🖋 **200 attributed proverbs** from 79 sources — Confucius, Laozi, Sun Tzu, Mencius, Zhuangzi, Li Bai, Du Fu, Su Shi, Xin Qiji, the *Water Margin*, and more, each tagged with author and dynasty/text.
 - ⌨️ **Keyboard** — `Space` / `Enter` to roll, `C` to copy.
 - 📱 Responsive, with a `prefers-reduced-motion` fallback. No build step, no dependencies.

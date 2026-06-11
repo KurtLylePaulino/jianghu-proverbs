@@ -4,6 +4,8 @@
 
   const els = {
     scroll:     document.getElementById("scroll"),
+    inner:      document.querySelector(".scroll-inner"),
+    attribution: document.getElementById("attribution"),
     proverb:    document.querySelector(".proverb"),
     zh:         document.getElementById("zh"),
     py:         document.getElementById("py"),
@@ -34,18 +36,30 @@
   }
 
   function render(p, idx) {
-    els.zh.innerHTML = p.zh;
+    // brush-write the Chinese character by character
+    els.zh.innerHTML = p.zh.split("").map(function (ch, i) {
+      return '<span class="char" style="--i:' + i + '">' + ch + "</span>";
+    }).join("");
+
+    // the other lines follow once the brush finishes
+    var lead = Math.min(p.zh.length * 55, 1500);
+    els.py.style.animationDelay = (lead + 100) + "ms";
+    els.en.style.animationDelay = (lead + 280) + "ms";
+    els.attribution.style.animationDelay = (lead + 460) + "ms";
+    els.stamp.style.animationDelay = (lead + 620) + "ms";
+
     els.py.textContent = p.py || "";
     els.en.textContent = p.en || "";
     els.author.textContent = p.author || "";
     els.dynasty.textContent = p.dynasty || "";
     els.stamp.textContent = "第\n" + (idx + 1);
-    els.stamp.classList.add("show");
 
-    // restart swap animation
-    els.proverb.classList.remove("swap");
-    void els.proverb.offsetWidth;
-    els.proverb.classList.add("swap");
+    // restart the staggered reveal + seal thump
+    els.stamp.classList.remove("show");
+    els.inner.classList.remove("swap");
+    void els.inner.offsetWidth;
+    els.inner.classList.add("swap");
+    els.stamp.classList.add("show");
   }
 
   function roll() {
@@ -111,6 +125,64 @@
 
   els.rollBtn.addEventListener("click", roll);
   els.copyBtn.addEventListener("click", copy);
+
+  // ---- opening sequence: doors part, scroll unrolls ----
+  (function introSequence() {
+    var el = document.getElementById("intro");
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var revealed = false;
+
+    function reveal() {
+      if (revealed) return;
+      revealed = true;
+      document.body.classList.remove("intro-playing");
+      document.body.classList.add("intro-done");
+      roll(); // re-draw so the brush writes in sync with the unrolling scroll
+    }
+    function dismiss() {
+      reveal();
+      if (el) {
+        el.classList.add("gone");
+        setTimeout(function () {
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+          el = null;
+        }, 450);
+      }
+    }
+
+    if (!el || reduce) { dismiss(); return; }
+    el.addEventListener("click", dismiss);
+    document.addEventListener("keydown", function onKey() {
+      document.removeEventListener("keydown", onKey);
+      dismiss();
+    });
+    setTimeout(reveal, 2400);  // doors begin to part
+    setTimeout(dismiss, 3550); // overlay fully gone
+  })();
+
+  // ---- qi ripple on click ----
+  document.addEventListener("pointerdown", function (e) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var q = document.createElement("i");
+    q.className = "qi";
+    q.style.left = e.clientX + "px";
+    q.style.top = e.clientY + "px";
+    document.body.appendChild(q);
+    setTimeout(function () { if (q.parentNode) q.parentNode.removeChild(q); }, 700);
+  });
+
+  // ---- embers drifting up through the night ----
+  (function spawnEmbers() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    for (var i = 0; i < 7; i++) {
+      var e = document.createElement("i");
+      e.className = "ember";
+      e.style.left = (5 + Math.random() * 90).toFixed(1) + "%";
+      e.style.animationDuration = (11 + Math.random() * 10).toFixed(1) + "s";
+      e.style.animationDelay = (-Math.random() * 18).toFixed(1) + "s";
+      document.body.appendChild(e);
+    }
+  })();
 
   // ---- falling plum-blossom petals ----
   (function spawnPetals() {
