@@ -6,7 +6,7 @@ A single-page GitHub Pages site that rolls a **random Chinese proverb** from a c
 
 - 🎲 **Draw Lots** — roll a random proverb (never repeats the one just shown).
 - 📋 **Copy** — one click copies the proverb, pinyin, translation, and attribution to the clipboard.
-- 🎻 **Erhu ambience** — a generative erhu-style melody synthesized live with the Web Audio API (D-major pentatonic, bowed envelope, delayed vibrato, valley echo). No audio files, nothing to license; toggle it with the 琴 button.
+- 🎻 **Music** — loops "Silent Bamboo Path" with a soft fade in/out; toggle it with the 琴 button. The track lazy-loads only when first played.
 - 🏮 **Animated scenery** — parallax mountain silhouettes, fog banks, a breathing moon, swaying lanterns (武 / 俠), falling petals, and birds crossing the sky.
 - 🖋 **200 attributed proverbs** from 79 sources — Confucius, Laozi, Sun Tzu, Mencius, Zhuangzi, Li Bai, Du Fu, Su Shi, Xin Qiji, the *Water Margin*, and more, each tagged with author and dynasty/text.
 - ⌨️ **Keyboard** — `Space` / `Enter` to roll, `C` to copy.
@@ -19,7 +19,8 @@ index.html        # markup
 css/style.css     # wuxia/murim styling + animated scenery
 js/proverbs.js    # the 200 proverbs (zh, pinyin, en, author, dynasty)
 js/app.js         # roll + copy + petals + music toggle
-js/audio.js       # generative erhu ambience (Web Audio)
+js/audio.js       # music player (loop + fade) for the bamboo track
+audio/silent-bamboo-path.mp3   # background music
 .nojekyll         # serve assets as-is on GitHub Pages
 ```
 
