@@ -1,12 +1,14 @@
 # 江湖箴言 · Wisdom of the Rivers & Lakes
 
-A single-page GitHub Pages site that rolls a **random Chinese proverb** from a curated set of **150 classics**, each shown with its **original author / source**, pinyin, and an English rendering — all wrapped in a *wuxia / murim* (武侠 · 江湖) aesthetic: a hanging silk scroll on aged rice paper, cinnabar seals, gold calligraphy, and drifting ink mist.
+A single-page GitHub Pages site that rolls a **random Chinese proverb** from a curated set of **200 classics**, each shown with its **original author / source**, pinyin, and an English rendering — all wrapped in a living *wuxia / murim* (武侠 · 江湖) scene: a hanging silk scroll on aged rice paper, swaying red lanterns, drifting mountain ranges with a distant pagoda, a glowing moon, falling plum-blossom petals, passing birds, and an optional erhu-style ambience.
 
 ## Features
 
 - 🎲 **Draw Lots** — roll a random proverb (never repeats the one just shown).
 - 📋 **Copy** — one click copies the proverb, pinyin, translation, and attribution to the clipboard.
-- 🖋 **150 attributed proverbs** from 52 sources — Confucius, Laozi, Sun Tzu, Mencius, Zhuangzi, Li Bai, Du Fu, Su Shi, and more, each tagged with author and dynasty/text.
+- 🎻 **Erhu ambience** — a generative erhu-style melody synthesized live with the Web Audio API (D-major pentatonic, bowed envelope, delayed vibrato, valley echo). No audio files, nothing to license; toggle it with the 琴 button.
+- 🏮 **Animated scenery** — parallax mountain silhouettes, fog banks, a breathing moon, swaying lanterns (武 / 俠), falling petals, and birds crossing the sky.
+- 🖋 **200 attributed proverbs** from 79 sources — Confucius, Laozi, Sun Tzu, Mencius, Zhuangzi, Li Bai, Du Fu, Su Shi, Xin Qiji, the *Water Margin*, and more, each tagged with author and dynasty/text.
 - ⌨️ **Keyboard** — `Space` / `Enter` to roll, `C` to copy.
 - 📱 Responsive, with a `prefers-reduced-motion` fallback. No build step, no dependencies.
 
@@ -14,9 +16,10 @@ A single-page GitHub Pages site that rolls a **random Chinese proverb** from a c
 
 ```
 index.html        # markup
-css/style.css     # wuxia/murim styling
-js/proverbs.js    # the 150 proverbs (zh, pinyin, en, author, dynasty)
-js/app.js         # roll + copy logic
+css/style.css     # wuxia/murim styling + animated scenery
+js/proverbs.js    # the 200 proverbs (zh, pinyin, en, author, dynasty)
+js/app.js         # roll + copy + petals + music toggle
+js/audio.js       # generative erhu ambience (Web Audio)
 .nojekyll         # serve assets as-is on GitHub Pages
 ```
 

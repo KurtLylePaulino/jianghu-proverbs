@@ -112,6 +112,34 @@
   els.rollBtn.addEventListener("click", roll);
   els.copyBtn.addEventListener("click", copy);
 
+  // ---- falling plum-blossom petals ----
+  (function spawnPetals() {
+    var box = document.getElementById("petals");
+    if (!box || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var n = window.innerWidth < 600 ? 10 : 18;
+    for (var i = 0; i < n; i++) {
+      var p = document.createElement("i");
+      p.className = "petal";
+      p.style.left = (Math.random() * 100).toFixed(1) + "%";
+      p.style.setProperty("--s", (0.55 + Math.random() * 0.9).toFixed(2));
+      p.style.animationDuration = (9 + Math.random() * 12).toFixed(1) + "s";
+      p.style.animationDelay = (-Math.random() * 20).toFixed(1) + "s";
+      box.appendChild(p);
+    }
+  })();
+
+  // ---- erhu ambience toggle ----
+  var musicBtn = document.getElementById("musicBtn");
+  var musicLabel = document.getElementById("musicLabel");
+  if (musicBtn && window.ErhuMusic) {
+    musicBtn.addEventListener("click", function () {
+      var on = ErhuMusic.toggle();
+      musicBtn.classList.toggle("playing", on);
+      musicBtn.setAttribute("aria-pressed", on ? "true" : "false");
+      musicLabel.textContent = on ? "止乐 · Silence" : "奏乐 · Music";
+    });
+  }
+
   // keyboard: space / enter rolls, C copies
   document.addEventListener("keydown", function (e) {
     if (e.target.tagName === "BUTTON") return;
